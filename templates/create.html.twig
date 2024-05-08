@@ -1,0 +1,18 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+	<main>
+		<form method="post" id="forma" action="/create">
+			<h3>
+				<label for="Name">Название</label>
+			</h3>
+			<textarea id="Name" type="text" name="title"></textarea>
+
+			<h3>
+				<label for="text">Текст</label>
+			</h3>
+			<textarea id="text" type="text" name="content" rows="5" , cols="50"></textarea>
+
+			<input class="submit" type="submit" value="Create">
+		</main>
+	{% endblock %}

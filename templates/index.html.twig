@@ -1,0 +1,28 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+	<main>
+		{% for article in articles %}
+			<article>
+
+				<div class="inftext">
+					<h2>{{article.title}}</h2>
+					<div class='author'>{{article.author.name}}</div>
+					<div>{{article.text|slice(0,255)}}...</div>
+					<div>{{article.days}}</div>
+					<a href="/articles/{{article.id}}" class="red">Читать</a>
+					<div></article>
+				{% endfor %}
+				{% if page!=1 %}
+					<div class="back">
+						<a href="/?page={{page-1}}">Назад</a>
+					</div>
+				{% endif %}
+				{% if page!=maxPage %}
+					<div class="forward">
+						<a href="/?page={{page+1}}">Вперед</a>
+					</div>
+				{% endif %}
+
+			</main>
+		{% endblock %}

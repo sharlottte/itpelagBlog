@@ -1,0 +1,16 @@
+{
+    "name": "sharlottte/itpelag",
+    "autoload": {
+        "psr-4": {
+            "Sharlottte\\Itpelag\\": "src/"
+        }
+    },
+    "require": {
+        "twig/twig": "^3.0",
+        "bramus/router": "~1.6",
+        "php-di/php-di": "^7.0",
+        "doctrine/orm": "^3.1",
+        "doctrine/dbal": "^4.0",
+        "symfony/cache": "^6.4"
+    }
+}

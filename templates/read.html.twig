@@ -1,0 +1,45 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+	<main id="reading">
+		<article class="read">
+			<div class="inftext">
+				<h2>{{article.title}}</h2>
+				{% if user %}
+					<div id="heart"></div>
+					<form method="post" id="like" action="/articles/{{article.id}}/like">
+						<button>{{countlikes}}</button>
+					</form>
+				{% endif %}
+				<div class='author'>{{article.author.name}}</div>
+				<div>{{article.text}}</div>
+				<div>{{article.days}}</div>
+				{% if article.author.id==user.id %}
+					<a href="/articles/{{article.id}}/edit" class="red">Редактировать</a>
+				{% endif %}
+
+				<h3>Комментарии({{count}})</h3>
+				{% for comment in comments %}
+					<comment>
+
+						<div class="comments">
+							<div class='author'>{{comment.author.name}}</div>
+							<div>{{comment.content}}</div>
+						</div>
+
+					</comment>
+				{% endfor %}
+
+
+				{% if user %}
+					<form method="post" id="forma" action="/articles/{{article.id}}">
+						<h3>
+							<label for="text">Оставьте комментарий!</label>
+						</h3>
+						<textarea id="comment" type="text" name="content" rows="5" , cols="50"></textarea>
+						<input class="submit" type="submit" value="Comment"></form>
+				{% endif %}
+				<div></article>
+			</main>
+			<script src="/js/read.js"></script>
+		{% endblock %}

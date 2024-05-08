@@ -1,0 +1,18 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+	<main>
+		<form method="post" id="forma" action="/articles/{{article.id}}/edit">
+			<h3>
+				<label for="Name">Название</label>
+			</h3>
+			<textarea id="Name" type="title" name="title">{{ article.title }}</textarea>
+
+			<h3>
+				<label for="text">Текст</label>
+			</h3>
+			<textarea id="text" type="text" name="content" rows="5" , cols="50">{{ article.text }}</textarea>
+
+			<input class="submit" type="submit" value="Change">
+		</main>
+	{% endblock %}
