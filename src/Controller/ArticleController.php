@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Sharlottte\Itpelag\Common\UserSession;
 use Sharlottte\Itpelag\Model\Article;
 use Sharlottte\Itpelag\Model\Comment;
+use Sharlottte\Itpelag\Model\Like;
 use Twig\Environment;
 
 class ArticleController
@@ -20,7 +21,7 @@ class ArticleController
     public function index()
     {
         $articlesData = [];
-        $kolvo = 5;
+        $kolvo = 20;
         $page = $_GET['page'] ?? 1;
         if ($page < 1) {
             header('Location: /1');
@@ -52,34 +53,53 @@ class ArticleController
         ]);
     }
 
+
+    
+
+
     public function show($id)
     {
         $article = $this->em->find(Article::class, $id);
+        $likee = $this->em->find(Like::class, ['author' => $this->userSession->getUser(), 'article' => $article]);
+ 
+
         $this->twig->load('read.html.twig')->display([
             'article' => $article->toArray(),
             'comments' => $article->getComments(),
             'count' => $article->getComments()->count(),
             'countlikes' => $article->getLikes()->count(),
+            'isLiked' => $likee !== null,
             'id' => $id,
         ]);
     }
-
-
 
 
     public function create()
     {
         $this->twig->load('create.html.twig')->display();
     }
+
+
     public function creating()
     {
-        $article = new Article($_POST['title'], $_POST['content'], $this->userSession->getUser());
-        $this->em->persist($article);
-        $this->em->flush();
+
+        if(mb_strlen($_POST['title'])<8||mb_strlen($_POST['content'])<30){
+            header('Location: /create');
+            return;
+
+            //Сообщение об ошибке
+        }
+        $articleName = $this->em->getRepository(Article::class)->findOneBy(['title' => $_POST['title']]);
+
+        if($articleName==null)
+        {
+            $article = new Article($_POST['title'], $_POST['content'], $this->userSession->getUser());
+            $this->em->persist($article);
+            $this->em->flush();
+    }
 
         header('Location: /');
     }
-
 
 
     public function change($id)
@@ -89,7 +109,6 @@ class ArticleController
             'article' => $article->toArray(),
             'id' => $id,
         ]);
-        print_r($_SESSION);
     }
     public function changing($id)
     {
@@ -98,7 +117,25 @@ class ArticleController
             header('Location: /articles/' . $id);
             return;
         }
-        $article->update($_POST['title'], $_POST['content']);
+
+        $articleName = $this->em->getRepository(Article::class)->findOneBy(['title' => $_POST['title']]);
+        if($articleName!=null){
+            if($articleName->getId()!==$article->getId()){
+                header('Location: /articles/' . $id .'/edit');
+                //Сообщение об ошибке
+                return;
+            }
+        }
+
+
+        if(mb_strlen($_POST['title'])<8||mb_strlen($_POST['content'])<30){
+            header('Location: /articles/' . $id .'/edit');
+            //Сообщение об ошибке
+            return;
+        }
+        
+        $article->update($_POST['title'],$_POST['content']);
+
         $this->em->persist($article);
         $this->em->flush();
 

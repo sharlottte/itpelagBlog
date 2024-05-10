@@ -23,6 +23,21 @@ class UserController
     public function register()
     {
         $user = new User($_POST['name'], $_POST['password']);
+
+        $userName = $this->em->getRepository(User::class)->findOneBy(['name' => $_POST['name']]);
+        if($userName!=null){
+            header('Location: /registration');
+            //Сообщение об ошибке
+            return;
+        }
+
+
+        if(mb_strlen($_POST['name'])<8||mb_strlen($_POST['password'])<8){
+            header('Location: /registration');
+            //Сообщение об ошибке
+            return;
+        }
+
         $this->em->persist($user);
         $this->em->flush();
 
@@ -45,12 +60,16 @@ class UserController
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['name' => $_POST['name']]);
         if (!$user) {
-            echo "Неа, врешь";
+            header('Location: /login');
+            //Сообщение об ошибке
+            //echo "Неа, врешь";
             return;
         }
 
         if (!$user->verifyPassword($_POST['password'])) {
-            echo "обманываешь";
+            header('Location: /login');
+            //Сообщение об ошибке
+            //echo "обманываешь";
             return;
         }
         $this->userSession->saveSession($user);

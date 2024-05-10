@@ -8,7 +8,16 @@
 				{% if user %}
 					<div id="heart"></div>
 					<form method="post" id="like" action="/articles/{{article.id}}/like">
-						<button>{{countlikes}}</button>
+						<button>
+						{% if isLiked %}
+							<img class="hearts" src="/pictures/heart.png"/>
+						{% else  %}
+						<img class="hearts" src="/pictures/heart2.png"/>
+						{% endif %}
+							<div class="count">
+							{{countlikes}}
+							</div>
+						</button>
 					</form>
 				{% endif %}
 				<div class='author'>{{article.author.name}}</div>

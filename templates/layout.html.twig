@@ -25,6 +25,8 @@
 
 			</nav>
 		</header>
+		{% for message in messages %} {{message.message}}
+		{% endfor %}
 		{% block content %}{% endblock %}
 	</body>
 </html>

@@ -25,6 +25,8 @@ class UserSession
         }
         $this->user = $this->em->find(User::class, $_SESSION['id']);
         $this->twig->addGlobal('user', $this->user?->toArray());
+        $this->twig->addGlobal('messages', $_SESSION['messages'] ?? []);
+        $_SESSION['messages'] = [];
     }
 
     public function getUser(): ?User
@@ -40,5 +42,9 @@ class UserSession
     public function saveSession(User $user)
     {
         $_SESSION['id'] = $user->getId();
+    }
+
+    public function flashMessage(string $level, string $message) {
+        $_SESSION['messages'][] = ['level'=> $level,'message'=> $message];
     }
 }

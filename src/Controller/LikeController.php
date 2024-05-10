@@ -34,10 +34,5 @@ class LikeController
         header('Location: /articles/' . $id);
     }
 
-    public function isLike($id)
-    {
-        $article = $this->em->find(Article::class, $id);
-        $likee = $this->em->find(Like::class, ['author' => $this->userSession->getUser(), 'article' => $article]);
-        return $likee;
-    }
 }
+

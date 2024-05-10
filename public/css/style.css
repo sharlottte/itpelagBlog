@@ -134,20 +134,25 @@ article button {
   top: 10px;
 }
 
-article img.like {
-  width: 31px;
-  height: auto;
-  position: absolute;
-}
 
-div#heart {
-  width: 31px;
+button {
+  background-color: rgb(248, 243, 243);
+  width: 30px;
+  border: none;
   height: auto;
-  position: absolute;
   right: 10px;
   top: 10px;
 }
+img.hearts{
+  width: 20px;
+  height: 20px;
+}
 
+div.count{
+  right:30px;
+  bottom:5px;
+  position: absolute;
+}
 
 form textarea#comment {
   width: 100%;
