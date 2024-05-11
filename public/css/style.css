@@ -108,7 +108,7 @@ input.submit {
   color: aliceblue;
   border: none;
   border-radius: 5px;
-  width: 100px;
+  width: 120px;
   height: 30px;
   margin: 10px;
   margin-left: auto;
@@ -206,4 +206,36 @@ div.back a,
 div.forward a {
   color: aliceblue;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+
+div.errorBlock{
+  background-color:  rgb(153, 0, 0);
+  color: aliceblue;
+  position:absolute;
+  top: 30%;
+  left:30%;
+  right: 30%;
+  height:90px;
+  text-align: center;
+  z-index: 100;
+  border-color: rgb(153, 0, 0);
+  border-radius: 1px;
+  border-width: 2px;
+
+}
+div.errorMessage{
+  color: black;
+  height: 60px;
+  border-radius: 5px;
+  margin-top: 6px;
+  border: 3px solid rgb(153, 0, 0);
+  background-color: white;
+}
+img.closePic{
+  height: 20px;
+  position: absolute;
+  width: 20px;
+  right: 2px;
+  top:2px
 }

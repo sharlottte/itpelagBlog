@@ -33,6 +33,4 @@ class LikeController
         }
         header('Location: /articles/' . $id);
     }
-
 }
-

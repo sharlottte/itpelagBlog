@@ -3,6 +3,8 @@
 
 $container = require __DIR__ . '/../src/bootstrap.php';
 
+$container->get('Sharlottte\Itpelag\Common\Migrator')->run();
+
 $router = new \Bramus\Router\Router();
 
 $router->before('GET|POST', '/.*', fn () => $container->get('Sharlottte\Itpelag\Common\UserSession')->load());

@@ -98,5 +98,4 @@ class Article
             'author' => $this->getAuthor()->toArray(),
         ];
     }
-    
 }

@@ -24,24 +24,32 @@ class CommentController
     {
         $article = $this->em->find(Article::class, $id);
         $lastComment = $this->getLastComment($article);
-        $lastAuthor=$this->getLastThreeCommentsAuthor($article);
-        $lastTime = $lastComment->getCreated()->getTimestamp();
+        $lastAuthor = $this->getLastThreeCommentsAuthor($article);
 
-        if($_POST['content']==''){
+
+
+        if ($_POST['content'] == '') {
             header('Location: /articles/' . $id);
-            //Сообщение об ошибке
+            $this->userSession->flashMessage('error', 'Комментарий не может быть пустым');
             return;
         }
 
-
-        if ((!$lastComment || time() - $lastTime > 60) && $lastAuthor!=$this->userSession->getUser()) {
+        if ($lastComment != null) {
+            $lastTime = $lastComment->getCreated()->getTimestamp();
+            if ((!$lastComment || time() - $lastTime > 60) && $lastAuthor != $this->userSession->getUser()) {
+                $comment = new Comment($this->userSession->getUser(), $article, $_POST['content'],);
+                $this->em->persist($comment);
+                $this->em->flush();
+            } else {
+                $this->userSession->flashMessage('error', 'Нельзя оставлять больше одного комментария в минуту и осталять более 2 комментариев подряд');
+            }
+        } else {
             $comment = new Comment($this->userSession->getUser(), $article, $_POST['content'],);
             $this->em->persist($comment);
             $this->em->flush();
-        } else {
-            $this->userSession->flashMessage('error', 'Вы не молодец');
-            //Сообщение об ошибке
         }
+
+
 
         header('Location: /articles/' . $id);
     }
@@ -81,7 +89,8 @@ class CommentController
             ->getResult();
 
 
-        if (count($lastComments)=== 3 &&
+        if (
+            count($lastComments) === 3 &&
             $lastComments[0]->getAuthor() === $lastComments[1]->getAuthor() &&
             $lastComments[1]->getAuthor() === $lastComments[2]->getAuthor()
         ) {

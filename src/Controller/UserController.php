@@ -25,15 +25,17 @@ class UserController
         $user = new User($_POST['name'], $_POST['password']);
 
         $userName = $this->em->getRepository(User::class)->findOneBy(['name' => $_POST['name']]);
-        if($userName!=null){
+        if ($userName != null) {
             header('Location: /registration');
-            //Сообщение об ошибке
+            $this->userSession->flashMessage('error', 'Это имя уже занято');
+
             return;
         }
 
 
-        if(mb_strlen($_POST['name'])<8||mb_strlen($_POST['password'])<8){
+        if (mb_strlen($_POST['name']) < 8 || mb_strlen($_POST['password']) < 8) {
             header('Location: /registration');
+            $this->userSession->flashMessage('error', 'Имя и пароль не могут быть меньше 8 символов');
             //Сообщение об ошибке
             return;
         }
@@ -61,15 +63,14 @@ class UserController
         $user = $this->em->getRepository(User::class)->findOneBy(['name' => $_POST['name']]);
         if (!$user) {
             header('Location: /login');
-            //Сообщение об ошибке
-            //echo "Неа, врешь";
+            $this->userSession->flashMessage('error', 'Неверный логин или пароль');
+
             return;
         }
 
         if (!$user->verifyPassword($_POST['password'])) {
             header('Location: /login');
-            //Сообщение об ошибке
-            //echo "обманываешь";
+            $this->userSession->flashMessage('error', 'Неверный логин или пароль');
             return;
         }
         $this->userSession->saveSession($user);

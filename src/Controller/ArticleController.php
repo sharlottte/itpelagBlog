@@ -54,14 +54,14 @@ class ArticleController
     }
 
 
-    
+
 
 
     public function show($id)
     {
         $article = $this->em->find(Article::class, $id);
         $likee = $this->em->find(Like::class, ['author' => $this->userSession->getUser(), 'article' => $article]);
- 
+
 
         $this->twig->load('read.html.twig')->display([
             'article' => $article->toArray(),
@@ -83,22 +83,23 @@ class ArticleController
     public function creating()
     {
 
-        if(mb_strlen($_POST['title'])<8||mb_strlen($_POST['content'])<30){
+        if (mb_strlen($_POST['title']) < 8 || mb_strlen($_POST['content']) < 30) {
             header('Location: /create');
-            return;
+            $this->userSession->flashMessage('error', 'Название не может быть короче 8 символов, а контент не может быть меньше 30 символов');
 
-            //Сообщение об ошибке
+            return;
         }
         $articleName = $this->em->getRepository(Article::class)->findOneBy(['title' => $_POST['title']]);
 
-        if($articleName==null)
-        {
+        if ($articleName == null) {
             $article = new Article($_POST['title'], $_POST['content'], $this->userSession->getUser());
             $this->em->persist($article);
             $this->em->flush();
-    }
-
-        header('Location: /');
+            header('Location: /');
+        } else {
+            $this->userSession->flashMessage('error', 'Название статьи должно быть оригинальным');
+            header('Location: /create');
+        }
     }
 
 
@@ -119,22 +120,23 @@ class ArticleController
         }
 
         $articleName = $this->em->getRepository(Article::class)->findOneBy(['title' => $_POST['title']]);
-        if($articleName!=null){
-            if($articleName->getId()!==$article->getId()){
-                header('Location: /articles/' . $id .'/edit');
-                //Сообщение об ошибке
+        if ($articleName != null) {
+            if ($articleName->getId() !== $article->getId()) {
+                header('Location: /articles/' . $id . '/edit');
+                $this->userSession->flashMessage('error', 'Название статьи должно быть оригинальным');
+
                 return;
             }
         }
 
 
-        if(mb_strlen($_POST['title'])<8||mb_strlen($_POST['content'])<30){
-            header('Location: /articles/' . $id .'/edit');
-            //Сообщение об ошибке
+        if (mb_strlen($_POST['title']) < 8 || mb_strlen($_POST['content']) < 30) {
+            header('Location: /articles/' . $id . '/edit');
+            $this->userSession->flashMessage('error', 'Название не может быть короче 8 символов, а контент не может быть меньше 30 символов');
             return;
         }
-        
-        $article->update($_POST['title'],$_POST['content']);
+
+        $article->update($_POST['title'], $_POST['content']);
 
         $this->em->persist($article);
         $this->em->flush();

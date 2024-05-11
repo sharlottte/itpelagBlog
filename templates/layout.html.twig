@@ -25,8 +25,22 @@
 
 			</nav>
 		</header>
-		{% for message in messages %} {{message.message}}
+		{% for message in messages %}
+			<div class="errorBlock">Ошибка
+			<img class="closePic" src="/pictures/closePic.png"/>
+				<div class="errorMessage">
+					{{message.message}}</div>
+			</div>
 		{% endfor %}
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var errorBlock = document.getElementsByClassName('errorBlock');
+				var closePic =  document.getElementsByClassName('closePic');
+				closePic[0].addEventListener('click', function () {
+					errorBlock[0].remove();
+				});
+			});
+		</script>
 		{% block content %}{% endblock %}
 	</body>
 </html>
