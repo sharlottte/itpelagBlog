@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Common;
 
-use Twig\Environment;
 use Doctrine\ORM\EntityManager;
 use Sharlottte\Itpelag\Model\User;
+use Twig\Environment;
 
 class UserSession
 {
@@ -23,6 +25,7 @@ class UserSession
         $_SESSION['messages'] = [];
         if (!isset($_SESSION['id'])) {
             $this->twig->addGlobal('user', null);
+
             return;
         }
         $this->user = $this->em->find(User::class, $_SESSION['id']);

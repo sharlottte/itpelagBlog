@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Controller;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Sharlottte\Itpelag\Common\UserSession;
 use Sharlottte\Itpelag\Model\Article;
@@ -19,39 +20,35 @@ class CommentController
     ) {
     }
 
-
     public function comment($id)
     {
         $article = $this->em->find(Article::class, $id);
         $lastComment = $this->getLastComment($article);
         $lastAuthor = $this->getLastThreeCommentsAuthor($article);
 
-
-
-        if ($_POST['content'] == '') {
-            header('Location: /articles/' . $id);
+        if ('' === $_POST['content']) {
+            header('Location: /articles/'.$id);
             $this->userSession->flashMessage('error', 'Комментарий не может быть пустым');
+
             return;
         }
 
-        if ($lastComment != null) {
+        if (null !== $lastComment) {
             $lastTime = $lastComment->getCreated()->getTimestamp();
-            if ((!$lastComment || time() - $lastTime > 60) && $lastAuthor != $this->userSession->getUser()) {
-                $comment = new Comment($this->userSession->getUser(), $article, $_POST['content'],);
+            if ((!$lastComment || time() - $lastTime > 60) && $lastAuthor !== $this->userSession->getUser()) {
+                $comment = new Comment($this->userSession->getUser(), $article, $_POST['content']);
                 $this->em->persist($comment);
                 $this->em->flush();
             } else {
                 $this->userSession->flashMessage('error', 'Нельзя оставлять больше одного комментария в минуту и осталять более 2 комментариев подряд');
             }
         } else {
-            $comment = new Comment($this->userSession->getUser(), $article, $_POST['content'],);
+            $comment = new Comment($this->userSession->getUser(), $article, $_POST['content']);
             $this->em->persist($comment);
             $this->em->flush();
         }
 
-
-
-        header('Location: /articles/' . $id);
+        header('Location: /articles/'.$id);
     }
 
     private function getLastComment(Article $article): ?Comment
@@ -59,7 +56,7 @@ class CommentController
         $repository = $this->em->getRepository(Comment::class);
 
         try {
-            $lastComment = $repository->createQueryBuilder('comment')
+            return $repository->createQueryBuilder('comment')
                 ->andWhere('comment.article = :article')
                 ->andWhere('comment.author = :user')
                 ->setParameter('article', $article)
@@ -67,9 +64,8 @@ class CommentController
                 ->orderBy('comment.created', 'DESC')
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getSingleResult();
-
-            return $lastComment;
+                ->getSingleResult()
+            ;
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
@@ -79,23 +75,23 @@ class CommentController
     {
         $repository = $this->em->getRepository(Comment::class);
 
-
         $lastComments = $repository->createQueryBuilder('comment')
             ->andWhere('comment.article = :article')
             ->setParameter('article', $article)
             ->orderBy('comment.created', 'DESC')
             ->setMaxResults(3)
             ->getQuery()
-            ->getResult();
-
+            ->getResult()
+        ;
 
         if (
-            count($lastComments) === 3 &&
-            $lastComments[0]->getAuthor() === $lastComments[1]->getAuthor() &&
-            $lastComments[1]->getAuthor() === $lastComments[2]->getAuthor()
+            3 === \count($lastComments)
+            && $lastComments[0]->getAuthor() === $lastComments[1]->getAuthor()
+            && $lastComments[1]->getAuthor() === $lastComments[2]->getAuthor()
         ) {
             return $lastComments[0]->getAuthor();
         }
+
         return null;
     }
 }

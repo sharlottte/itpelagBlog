@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'articles')]
@@ -15,7 +16,6 @@ class Article
     #[ORM\Column]
     #[ORM\GeneratedValue]
     private ?int $id = null;
-
 
     #[ORM\Column]
     private string $title;
@@ -30,10 +30,10 @@ class Article
     #[ORM\Column]
     private \DateTimeImmutable $created;
 
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article',)]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', )]
     private Collection $comments;
 
-    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'article',)]
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'article', )]
     private Collection $likes;
 
     public function __construct(string $title, string $content, User $author)
@@ -80,7 +80,6 @@ class Article
     {
         return $this->likes;
     }
-
 
     public function update(string $title, string $content)
     {

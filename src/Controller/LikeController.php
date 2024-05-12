@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Controller;
 
 use Doctrine\ORM\EntityManager;
@@ -17,7 +19,6 @@ class LikeController
     ) {
     }
 
-
     public function like($id)
     {
         $article = $this->em->find(Article::class, $id);
@@ -31,6 +32,6 @@ class LikeController
             $this->em->persist($like);
             $this->em->flush();
         }
-        header('Location: /articles/' . $id);
+        header('Location: /articles/'.$id);
     }
 }

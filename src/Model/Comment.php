@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +25,6 @@ class Comment
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(name: 'article_id', referencedColumnName: 'id')]
     private Article $article;
-
 
     #[ORM\Column]
     private \DateTimeImmutable $created;
@@ -61,8 +62,6 @@ class Comment
         return $this->author;
     }
 
-
-
     #[ORM\Column]
     public function toArray()
     {
@@ -71,7 +70,6 @@ class Comment
             'article' => $this->getArticle()->toArray(),
             'author' => $this->getAuthor()->toArray(),
             'content' => $this->getContent(),
-
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Common;
 
 use Doctrine\DBAL\Connection;
@@ -14,11 +16,11 @@ class Migrator
     {
         $this->ensureMigrationsTableExists();
 
-        $migrationFiles = glob(__DIR__ . '/../../migrations/*.sql');
+        $migrationFiles = glob(__DIR__.'/../../migrations/*.sql');
         $executedMigrations = $this->connection->fetchFirstColumn('SELECT `name` FROM `migrations`');
         foreach ($migrationFiles as $migrationFile) {
-            $migrationName = substr(basename($migrationFile), 0, -4);
-            if (!in_array($migrationName, $executedMigrations, true)) {
+            $migrationName = mb_substr(basename($migrationFile), 0, -4);
+            if (!\in_array($migrationName, $executedMigrations, true)) {
                 $this->runMigration($migrationFile, $migrationName);
             }
         }

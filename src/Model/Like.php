@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sharlottte\Itpelag\Model;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -33,7 +35,6 @@ class Like
         return $this->article;
     }
 
-
     public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
@@ -43,8 +44,6 @@ class Like
     {
         return $this->author;
     }
-
-
 
     #[ORM\Column]
     public function toArray()
