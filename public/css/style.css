@@ -239,3 +239,7 @@ img.closePic{
   right: 2px;
   top:2px
 }
+main#not-found{
+  justify-content: center;
+  display: flex;
+}

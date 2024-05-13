@@ -36,5 +36,9 @@ $router->post('/articles/(\d+)', fn ($id) => $container->get('Sharlottte\Itpelag
 
 $router->post('/articles/(\d+)/like', fn ($id) => $container->get('Sharlottte\Itpelag\Controller\LikeController')->like($id));
 
+$router->set404(function () use ($container) {
+    header('HTTP/1.1 404 Not Found');
+    $container->get('Twig\Environment')->load('404.html.twig')->display();
+});
 
 $router->run();

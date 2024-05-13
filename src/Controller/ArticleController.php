@@ -25,7 +25,7 @@ class ArticleController
         $kolvo = 10;
         $page = $_GET['page'] ?? 1;
         if ($page < 1) {
-            header('Location: /1');
+            header('Location: /');
 
             return;
         }
@@ -33,7 +33,7 @@ class ArticleController
         $articlesCount = $repository->count();
         $maxPage = max(1, ceil($articlesCount / $kolvo));
         if ($page > $maxPage) {
-            header('Location: /'.$maxPage);
+            header('Location: /?page='.$maxPage);
 
             return;
         }
