@@ -58,7 +58,7 @@ class ArticleController
     public function show($id)
     {
         $article = $this->em->find(Article::class, $id);
-        $likee = $this->em->find(Like::class, ['author' => $this->userSession->getUser(), 'article' => $article]);
+        $likee = $this->userSession->getUser() ? $this->em->find(Like::class, ['author' => $this->userSession->getUser(), 'article' => $article]) : null;
 
         $this->twig->load('read.html.twig')->display([
             'article' => $article->toArray(),
